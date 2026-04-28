@@ -18,10 +18,18 @@ async function main() {
     transform: { position: [-1.0, 0.1, -0.5] },
   });
 
-  scene.createNode({
+  const canvasPanel = scene.createNode({
     type: "panel",
     props: { size: [0.9, 0.6], resolution: [900, 600], color: "#0f766e", title: "Canvas" },
     transform: { position: [0, 0.1, -0.5] },
+  });
+
+  // Per-frame title update — pressure-tests the props-change → renderer
+  // path. Currently every title change rebuilds the panel's canvas texture
+  // from scratch (see renderer-webgpu/panel-mesh.ts updatePanelMesh), which
+  // means a full canvas redraw + new CanvasTexture per frame here.
+  scene.events.on("frame", ({ time }) => {
+    canvasPanel.setProps({ title: `Canvas — ${time.toFixed(1)}s` });
   });
 
   scene.createNode({
