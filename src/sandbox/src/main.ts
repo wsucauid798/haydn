@@ -34,7 +34,7 @@ async function main() {
 
   scene.createNode({
     type: "panel",
-    props: { size: [0.9, 0.6], color: "#7c2d12", title: "Inspector" },
+    props: { size: [0.9, 0.6], color: "#7c2d12", title: "Inspector (billboard)", billboard: true },
     transform: { position: [1.0, 0.1, -0.5] },
   });
 

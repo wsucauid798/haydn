@@ -27,7 +27,14 @@ export interface NodeProps {
    * axis, which is a reasonable density for typical UI at typical viewing
    * distances. Override when you need finer or coarser content.
    */
-  panel: { size: Vec2; resolution?: Vec2; color?: string; title?: string };
+  panel: {
+    size: Vec2;
+    resolution?: Vec2;
+    color?: string;
+    title?: string;
+    /** When true, the renderer keeps the panel rotated to face the camera each frame. */
+    billboard?: boolean;
+  };
   group: Record<string, never>;
 }
 

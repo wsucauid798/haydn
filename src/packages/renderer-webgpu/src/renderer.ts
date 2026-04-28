@@ -3,6 +3,7 @@ import { WebGPURenderer } from "three/webgpu";
 import type { Node, NodeType, Scene } from "@haydn/core";
 import { DragController } from "./drag.js";
 import { applyTransformToMesh, createPanelMesh, updatePanelMesh } from "./panel-mesh.js";
+import { computeBillboardQuaternion } from "./billboard.js";
 
 export interface RendererOptions {
   scene: Scene;
@@ -74,10 +75,33 @@ export class Renderer {
     const loop = (t: number) => {
       if (this.disposed) return;
       this.haydn.tick(t / 1000);
+      this.applyBillboards();
       this.three.render(this.threeScene, this.camera);
       this.rafId = requestAnimationFrame(loop);
     };
     this.rafId = requestAnimationFrame(loop);
+  }
+
+  /**
+   * For every panel node with `props.billboard === true`, override its mesh
+   * quaternion so the panel faces the camera. Runs every frame; the cost is
+   * one quaternion compute + assign per billboard panel.
+   */
+  private applyBillboards(): void {
+    const camPos: [number, number, number] = [
+      this.camera.position.x,
+      this.camera.position.y,
+      this.camera.position.z,
+    ];
+    for (const [id, obj] of this.meshes) {
+      const node = this.haydn.getNode(id);
+      if (!node || node.type !== "panel") continue;
+      const panel = node as Node<"panel">;
+      if (!panel.props.billboard) continue;
+      const p = panel.transform.position;
+      const q = computeBillboardQuaternion([p[0], p[1], p[2]], camPos);
+      obj.quaternion.set(q[0], q[1], q[2], q[3]);
+    }
   }
 
   stop(): void {
@@ -125,7 +149,13 @@ export class Renderer {
   private handlePropsChanged(node: Node<NodeType>, keys: ReadonlyArray<string>): void {
     if (node.type !== "panel") return;
     const obj = this.meshes.get(node.id);
-    if (obj instanceof THREE.Mesh) updatePanelMesh(obj, node as Node<"panel">, keys);
+    if (!(obj instanceof THREE.Mesh)) return;
+    updatePanelMesh(obj, node as Node<"panel">, keys);
+    // When billboard turns off, the per-frame override stops writing, so we
+    // restore the node's authored rotation onto the mesh once.
+    if (keys.includes("billboard") && !(node as Node<"panel">).props.billboard) {
+      applyTransformToMesh(obj, node as Node<"panel">);
+    }
   }
 
   private handleVisibilityChanged(node: Node<NodeType>): void {

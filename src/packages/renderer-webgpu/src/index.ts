@@ -7,3 +7,4 @@ export {
   decidePanelRebuild,
   resolvePanelResolution,
 } from "./panel-mesh.js";
+export { computeBillboardQuaternion } from "./billboard.js";
