@@ -4,12 +4,12 @@
   "private": true,
   "description": "A spatial runtime for the open web",
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "src/packages/*",
+    "src/examples/*"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "dev": "npm run dev -w examples/sandbox",
+    "dev": "npm run dev -w @haydn-examples/sandbox",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:watch": "npm run test:watch --workspaces --if-present"
