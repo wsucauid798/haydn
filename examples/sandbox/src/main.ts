@@ -14,20 +14,20 @@ async function main() {
 
   scene.createNode({
     type: "panel",
-    props: { size: [0.8, 0.5], resolution: [800, 500], color: "#1e293b", title: "Tools" },
-    transform: { position: [-1.4, 0.3, -2] },
+    props: { size: [0.9, 0.6], resolution: [900, 600], color: "#1e293b", title: "Tools" },
+    transform: { position: [-1.0, 0.1, -0.5] },
   });
 
   scene.createNode({
     type: "panel",
-    props: { size: [0.8, 0.5], resolution: [800, 500], color: "#0f766e", title: "Canvas" },
-    transform: { position: [0, 0.3, -2] },
+    props: { size: [0.9, 0.6], resolution: [900, 600], color: "#0f766e", title: "Canvas" },
+    transform: { position: [0, 0.1, -0.5] },
   });
 
   scene.createNode({
     type: "panel",
-    props: { size: [0.8, 0.5], resolution: [800, 500], color: "#7c2d12", title: "Inspector" },
-    transform: { position: [1.4, 0.3, -2] },
+    props: { size: [0.9, 0.6], resolution: [900, 600], color: "#7c2d12", title: "Inspector" },
+    transform: { position: [1.0, 0.1, -0.5] },
   });
 
   scene.events.on("pointer", (e) => {

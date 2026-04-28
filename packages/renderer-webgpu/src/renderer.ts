@@ -45,7 +45,7 @@ export class Renderer {
       0.01,
       100,
     );
-    this.camera.position.set(0, 0, 3);
+    this.camera.position.set(0, 0, 1.0);
 
     this.threeScene.add(new THREE.AmbientLight(0xffffff, 1));
 
