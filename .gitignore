@@ -9,5 +9,19 @@ dist/
 # private design notes
 _design/
 
-# claude code: local settings, agents, worktrees
+# AI assistants — local settings, history, caches
 .claude/
+.codex/
+.cursor/
+.windsurf/
+.continue/
+.codeium/
+.cody/
+.cline/
+.roo/
+.kilo/
+.gemini/
+.zed/
+.tabnine/
+.aider*
+!.aiderignore
