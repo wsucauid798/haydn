@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Emitter } from "./emitter.js";
+import { Emitter } from "@haydn/core";
 
 interface TestEvents {
   ping: { n: number };

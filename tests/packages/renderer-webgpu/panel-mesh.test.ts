@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { decidePanelRebuild } from "./panel-mesh.js";
+import { decidePanelRebuild } from "@haydn/renderer-webgpu";
 
 describe("decidePanelRebuild — maps changed prop keys to rebuild work", () => {
   it("rebuilds nothing when no keys changed", () => {

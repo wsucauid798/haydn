@@ -1,5 +1,5 @@
 {
-  "name": "@haydn-examples/sandbox",
+  "name": "@haydn/sandbox",
   "version": "0.0.0",
   "private": true,
   "type": "module",

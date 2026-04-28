@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Node } from "./node.js";
-import { Scene } from "./scene.js";
+import { Node, Scene } from "@haydn/core";
 
 describe("Scene — node lifecycle events", () => {
   it("emits node:added when createNode is called", () => {
