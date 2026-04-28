@@ -15,16 +15,48 @@ export function createPanelMesh(node: Node<"panel">): THREE.Mesh {
   return mesh;
 }
 
-export function updatePanelMesh(mesh: THREE.Mesh, node: Node<"panel">): void {
+/**
+ * Decide which work `updatePanelMesh` needs to do given the props that
+ * changed on a panel node. Pure function — no DOM, no Three.js — so it's
+ * unit-testable in isolation.
+ *
+ * - `size` affects geometry only.
+ * - `color`, `title`, `resolution` affect the texture only.
+ * - Anything else (including unknown keys) is a no-op for the mesh.
+ */
+export function decidePanelRebuild(
+  changedKeys: ReadonlyArray<string>,
+): { geometry: boolean; texture: boolean } {
+  let geometry = false;
+  let texture = false;
+  for (const k of changedKeys) {
+    if (k === "size") geometry = true;
+    else if (k === "color" || k === "title" || k === "resolution") texture = true;
+  }
+  return { geometry, texture };
+}
+
+export function updatePanelMesh(
+  mesh: THREE.Mesh,
+  node: Node<"panel">,
+  changedKeys: ReadonlyArray<string>,
+): void {
+  const { geometry: rebuildGeometry, texture: rebuildTexture } = decidePanelRebuild(changedKeys);
+  if (!rebuildGeometry && !rebuildTexture) return;
+
   const { size, resolution, color, title } = node.props;
 
-  mesh.geometry.dispose();
-  mesh.geometry = new THREE.PlaneGeometry(size[0], size[1]);
+  if (rebuildGeometry) {
+    mesh.geometry.dispose();
+    mesh.geometry = new THREE.PlaneGeometry(size[0], size[1]);
+  }
 
-  const material = mesh.material as THREE.MeshBasicMaterial;
-  material.map?.dispose();
-  material.map = makePanelTexture(resolution[0], resolution[1], color ?? "#1f2937", title);
-  material.needsUpdate = true;
+  if (rebuildTexture) {
+    const material = mesh.material as THREE.MeshBasicMaterial;
+    material.map?.dispose();
+    material.map = makePanelTexture(resolution[0], resolution[1], color ?? "#1f2937", title);
+    material.needsUpdate = true;
+  }
 }
 
 export function applyTransformToMesh(mesh: THREE.Object3D, node: Node<"panel" | "group">): void {

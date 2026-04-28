@@ -55,7 +55,7 @@ export class Renderer {
       this.haydn.events.on("node:added", ({ node, parent }) => this.handleAdded(node, parent)),
       this.haydn.events.on("node:removed", ({ node }) => this.handleRemoved(node)),
       this.haydn.events.on("node:transform-changed", ({ node }) => this.handleTransformChanged(node)),
-      this.haydn.events.on("node:props-changed", ({ node }) => this.handlePropsChanged(node)),
+      this.haydn.events.on("node:props-changed", ({ node, keys }) => this.handlePropsChanged(node, keys)),
       this.haydn.events.on("node:visibility-changed", ({ node }) => this.handleVisibilityChanged(node)),
     );
 
@@ -122,10 +122,10 @@ export class Renderer {
     applyTransformToMesh(obj, node as Node<"panel" | "group">);
   }
 
-  private handlePropsChanged(node: Node<NodeType>): void {
+  private handlePropsChanged(node: Node<NodeType>, keys: ReadonlyArray<string>): void {
     if (node.type !== "panel") return;
     const obj = this.meshes.get(node.id);
-    if (obj instanceof THREE.Mesh) updatePanelMesh(obj, node as Node<"panel">);
+    if (obj instanceof THREE.Mesh) updatePanelMesh(obj, node as Node<"panel">, keys);
   }
 
   private handleVisibilityChanged(node: Node<NodeType>): void {
