@@ -14,13 +14,13 @@ async function main() {
 
   scene.createNode({
     type: "panel",
-    props: { size: [0.9, 0.6], resolution: [900, 600], color: "#1e293b", title: "Tools" },
+    props: { size: [0.9, 0.6], color: "#1e293b", title: "Tools" },
     transform: { position: [-1.0, 0.1, -0.5] },
   });
 
   const canvasPanel = scene.createNode({
     type: "panel",
-    props: { size: [0.9, 0.6], resolution: [900, 600], color: "#0f766e", title: "Canvas" },
+    props: { size: [0.9, 0.6], color: "#0f766e", title: "Canvas" },
     transform: { position: [0, 0.1, -0.5] },
   });
 
@@ -34,7 +34,7 @@ async function main() {
 
   scene.createNode({
     type: "panel",
-    props: { size: [0.9, 0.6], resolution: [900, 600], color: "#7c2d12", title: "Inspector" },
+    props: { size: [0.9, 0.6], color: "#7c2d12", title: "Inspector" },
     transform: { position: [1.0, 0.1, -0.5] },
   });
 

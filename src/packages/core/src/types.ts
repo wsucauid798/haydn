@@ -16,14 +16,18 @@ export const IDENTITY_TRANSFORM: Transform = {
 
 export type NodeType = "panel" | "group";
 
+/** Pixels per world-meter used when a panel is created without an explicit `resolution`. */
+export const DEFAULT_PANEL_PIXELS_PER_METER = 1000;
+
 export interface NodeProps {
   /**
    * `size`: panel dimensions in world meters (e.g. [0.8, 0.5] = 80cm wide, 50cm tall).
-   * `resolution`: pixel dimensions of the panel's content texture (e.g. [800, 500]).
-   * The two are independent: a 1m panel can be rendered at 512px or 4096px depending
-   * on how sharp you want the content to look at the user's viewing distance.
+   * `resolution`: optional override for the panel's content texture in pixels
+   * (e.g. [800, 500]). Defaults to `size * DEFAULT_PANEL_PIXELS_PER_METER` per
+   * axis, which is a reasonable density for typical UI at typical viewing
+   * distances. Override when you need finer or coarser content.
    */
-  panel: { size: Vec2; resolution: Vec2; color?: string; title?: string };
+  panel: { size: Vec2; resolution?: Vec2; color?: string; title?: string };
   group: Record<string, never>;
 }
 

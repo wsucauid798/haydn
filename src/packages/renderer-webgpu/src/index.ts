@@ -5,4 +5,5 @@ export {
   updatePanelMesh,
   applyTransformToMesh,
   decidePanelRebuild,
+  resolvePanelResolution,
 } from "./panel-mesh.js";

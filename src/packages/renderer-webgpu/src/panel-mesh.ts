@@ -1,12 +1,26 @@
 import * as THREE from "three";
-import type { Node } from "@haydn/core";
+import { DEFAULT_PANEL_PIXELS_PER_METER, type Node, type NodeProps, type Vec2 } from "@haydn/core";
+
+/**
+ * Resolve the effective texture resolution for a panel: the explicit
+ * `resolution` if set, otherwise `size × DEFAULT_PANEL_PIXELS_PER_METER` per
+ * axis (rounded to integer pixels). Pure — no DOM, no Three.js.
+ */
+export function resolvePanelResolution(props: Pick<NodeProps["panel"], "size" | "resolution">): Vec2 {
+  if (props.resolution) return props.resolution;
+  return [
+    Math.round(props.size[0] * DEFAULT_PANEL_PIXELS_PER_METER),
+    Math.round(props.size[1] * DEFAULT_PANEL_PIXELS_PER_METER),
+  ];
+}
 
 /** A panel is rendered as a plane with an optional canvas-rendered title strip. */
 export function createPanelMesh(node: Node<"panel">): THREE.Mesh {
-  const { size, resolution, color, title } = node.props;
+  const { size, color, title } = node.props;
+  const [resW, resH] = resolvePanelResolution(node.props);
 
   const geometry = new THREE.PlaneGeometry(size[0], size[1]);
-  const texture = makePanelTexture(resolution[0], resolution[1], color ?? "#1f2937", title);
+  const texture = makePanelTexture(resW, resH, color ?? "#1f2937", title);
   const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
   const mesh = new THREE.Mesh(geometry, material);
 
@@ -44,7 +58,7 @@ export function updatePanelMesh(
   const { geometry: rebuildGeometry, texture: rebuildTexture } = decidePanelRebuild(changedKeys);
   if (!rebuildGeometry && !rebuildTexture) return;
 
-  const { size, resolution, color, title } = node.props;
+  const { size, color, title } = node.props;
 
   if (rebuildGeometry) {
     mesh.geometry.dispose();
@@ -52,9 +66,10 @@ export function updatePanelMesh(
   }
 
   if (rebuildTexture) {
+    const [resW, resH] = resolvePanelResolution(node.props);
     const material = mesh.material as THREE.MeshBasicMaterial;
     material.map?.dispose();
-    material.map = makePanelTexture(resolution[0], resolution[1], color ?? "#1f2937", title);
+    material.map = makePanelTexture(resW, resH, color ?? "#1f2937", title);
     material.needsUpdate = true;
   }
 }
