@@ -12,7 +12,12 @@ export interface NodeInit<T extends NodeType> {
   visible?: boolean;
 }
 
-type NodeMutationCallback = (node: Node<NodeType>, kind: "transform" | "props" | "visibility") => void;
+type NodeMutationCallback = (
+  node: Node<NodeType>,
+  kind: "transform" | "props" | "visibility",
+  /** For `kind === "props"`, the names of the props the caller passed to `setProps`. */
+  keys?: ReadonlyArray<string>,
+) => void;
 
 export class Node<T extends NodeType = NodeType> {
   readonly id: string;
@@ -72,8 +77,10 @@ export class Node<T extends NodeType = NodeType> {
   }
 
   setProps(props: Partial<NodeProps[T]>): void {
+    const keys = Object.keys(props);
+    if (keys.length === 0) return;
     this._props = { ...this._props, ...props };
-    this.onMutate?.(this, "props");
+    this.onMutate?.(this, "props", keys);
   }
 
   setVisible(visible: boolean): void {

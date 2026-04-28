@@ -6,7 +6,7 @@ export interface SceneEvents {
   "node:added": { node: Node<NodeType>; parent: Node<NodeType> | null };
   "node:removed": { node: Node<NodeType>; parent: Node<NodeType> | null };
   "node:transform-changed": { node: Node<NodeType> };
-  "node:props-changed": { node: Node<NodeType> };
+  "node:props-changed": { node: Node<NodeType>; keys: ReadonlyArray<string> };
   "node:visibility-changed": { node: Node<NodeType> };
   "frame": { dt: number; time: number };
   "pointer": PointerEvent;
@@ -82,9 +82,13 @@ export class Scene {
     this.events.emit("node:removed", { node, parent });
   }
 
-  private handleMutation = (node: Node<NodeType>, kind: "transform" | "props" | "visibility"): void => {
+  private handleMutation = (
+    node: Node<NodeType>,
+    kind: "transform" | "props" | "visibility",
+    keys?: ReadonlyArray<string>,
+  ): void => {
     if (kind === "transform") this.events.emit("node:transform-changed", { node });
-    else if (kind === "props") this.events.emit("node:props-changed", { node });
+    else if (kind === "props") this.events.emit("node:props-changed", { node, keys: keys ?? [] });
     else this.events.emit("node:visibility-changed", { node });
   };
 }
